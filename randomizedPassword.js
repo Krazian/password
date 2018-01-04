@@ -4,13 +4,13 @@ var promptUser = require('prompt');
 crypto = require('crypto');
 algorithm = 'aes-256-ctr';
 password = 'd6F3Efeq';
+yourPassword = "";
 
 promptUser.start();
 console.log("Welcome to the random password generator!\n\nWhat do you want to do?\n\n**** Current commands are: *****\n   >>>'generate': promptUsers you for parameters and generates a random password for you.\n   >>>'get': Gets a specific password that's already been generated\n   >>>'all': Shows you all passwords currently saved.\n   >>>'delete': Deletes a single password (CAUTION: This cannot be undone!)\n   >>>'delete all': Deletes all saved passwords (CAUTION: This cannot be undone!)\n");
 promptUser.get(['command'], function (err, result) {
 	switch (result.command.toLowerCase()){
 		case "generate":
-			var	yourPassword = "";
 			console.log("Please specify the following:\n**** Help: ****\nWebsite example: 'www.example.com'\nCase Sensitive: 'true' or 'false'\nSymbols: 'true' or 'false'\nLength: '9'");
 			promptUser.get(['website','caseSensitive','useSymbols','passwordLength'],function (err, genResult){
 				console.log(generatePassword(genResult.website,genResult.caseSensitive,genResult.useSymbols,genResult.passwordLength));
@@ -72,7 +72,7 @@ promptUser.get(['command'], function (err, result) {
 		var availableSymbols = ["!", "#", "$", "%", "&", "*", "+", ",", "-", ".", ":", ";", "<", "=", ">", "?", "@", "[", "]", "^", "_", "`", "|", "}", "~", "(", ")"];
 		var availableLetters = ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "l", "k", "j", "h", "g", "f", "d", "s", "a", "z", "x", "c", "v", "b", "n", "m"];
 		if (caseSensitivity === "true" && symbols === "true"){
-			for (var i = 0; i <= length; i++){
+			for (var i = 0; i < length; i++){
 				var choosing = Math.floor(Math.random() * 3);
 				if (choosing === 0){
 					var upperOrLower = Math.floor(Math.random()*2);
@@ -88,7 +88,7 @@ promptUser.get(['command'], function (err, result) {
 				}
 			}
 		} else if (caseSensitivity === "false" && symbols === "true"){
-			for (var o = 0; o <= length; o++){
+			for (var o = 0; o < length; o++){
 				var choosing1 = Math.floor(Math.random() * 2);
 				if (choosing1 === 0){
 					yourPassword += getRandomStuff(availableLetters);
@@ -99,7 +99,7 @@ promptUser.get(['command'], function (err, result) {
 				}
 			}
 		} else if (caseSensitivity === "true" && symbols === "false"){
-			for (var p = 0; p <= length; p++){
+			for (var p = 0; p < length; p++){
 				var choosing2 = Math.floor(Math.random() * 2);
 				if (choosing2 === 0){
 					var lowerOrUpper = Math.floor(Math.random()*2);
@@ -113,7 +113,7 @@ promptUser.get(['command'], function (err, result) {
 				}
 			}
 		} else if (caseSensitivity === "false" && symbols === "false") {
-			for (var l = 0; l <= length; l++){
+			for (var l = 0; l < length; l++){
 				var choosing3 = Math.floor(Math.random() * 2);
 				if (choosing3 === 0){
 					yourPassword += getRandomStuff(availableLetters);
