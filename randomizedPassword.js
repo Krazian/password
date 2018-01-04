@@ -1,10 +1,9 @@
 var fs = require('fs');
 var promptUser = require('prompt');
 	//Borrowed from http://lollyrock.com/articles/nodejs-encryption/
-crypto = require('crypto');
-algorithm = 'aes-256-ctr';
-password = 'd6F3Efeq';
-yourPassword = "";
+var crypto = require('crypto');
+let algorithm = 'aes-256-ctr';
+let password = 'd6F3Efeq';
 
 promptUser.start();
 console.log("Welcome to the random password generator!\n\nWhat do you want to do?\n\n**** Current commands are: *****\n   >>>'generate': promptUsers you for parameters and generates a random password for you.\n   >>>'get': Gets a specific password that's already been generated\n   >>>'all': Shows you all passwords currently saved.\n   >>>'delete': Deletes a single password (CAUTION: This cannot be undone!)\n   >>>'delete all': Deletes all saved passwords (CAUTION: This cannot be undone!)\n");
@@ -68,6 +67,7 @@ promptUser.get(['command'], function (err, result) {
 
 	//Function if command word is 'generate'
 	function generatePassword(url, caseSensitivity, symbols, length){
+		var yourPassword = "";
 		var passwords = fs.readFileSync("passwordStorage.json","utf-8");
 		var availableSymbols = ["!", "#", "$", "%", "&", "*", "+", ",", "-", ".", ":", ";", "<", "=", ">", "?", "@", "[", "]", "^", "_", "`", "|", "}", "~", "(", ")"];
 		var availableLetters = ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "l", "k", "j", "h", "g", "f", "d", "s", "a", "z", "x", "c", "v", "b", "n", "m"];
