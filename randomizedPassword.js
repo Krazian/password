@@ -6,9 +6,31 @@ let algorithm = 'aes-256-ctr';
 let password = 'd6F3Efeq';
 
 promptUser.start();
-console.log("Welcome to the random password generator!\n\nWhat do you want to do?\n\n**** Current commands are: *****\n   >>>'generate': promptUsers you for parameters and generates a random password for you.\n   >>>'get': Gets a specific password that's already been generated\n   >>>'all': Shows you all passwords currently saved.\n   >>>'delete': Deletes a single password (CAUTION: This cannot be undone!)\n   >>>'delete all': Deletes all saved passwords (CAUTION: This cannot be undone!)\n");
+console.log("Welcome to the random password generator!\n\nWhat do you want to do?\n\n**** Current commands are: *****\n   >>>'add': Manually add a password.\n   >>>'generate': promptUsers you for parameters and generates a random password for you.\n   >>>'get': Gets a specific password that's already been generated\n   >>>'all': Shows you all passwords currently saved.\n   >>>'delete': Deletes a single password (CAUTION: This cannot be undone!)\n   >>>'delete all': Deletes all saved passwords (CAUTION: This cannot be undone!)\n");
 promptUser.get(['command'], function (err, result) {
 	switch (result.command.toLowerCase()){
+		case "add":
+			promptUser.get(['website','password'],function(err, getInput){
+				var passwords = fs.readFileSync("passwordStorage.json","utf-8");
+				if(passwords == ""){
+					passwords = '[{"url":"'+getInput.website+'", "password":"'+getInput.password+'"}]';
+					fs.writeFile("passwordStorage.json", encrypt(passwords), function (err, data) {
+						if (err) throw err;
+						console.log("Password saved successfully");
+					});
+					return getInput.password;
+				} else {
+					var decryptedFile = JSON.parse(decrypt(passwords));
+					decryptedFile.push({"url":getInput.website, "password":getInput.password});
+					fs.writeFile("passwordStorage.json", encrypt(JSON.stringify(decryptedFile)), function (err, data){
+						if (err) throw err;
+						console.log("Password saved successfully");
+					});
+					return getInput.password;
+				}
+			});
+		break;
+
 		case "generate":
 			console.log("Please specify the following:\n**** Help: ****\nWebsite example: 'www.example.com'\nCase Sensitive: 'true' or 'false'\nSymbols: 'true' or 'false'\nLength: '9'");
 			promptUser.get(['website','caseSensitive','useSymbols','passwordLength'],function (err, genResult){
