@@ -6,9 +6,13 @@ let algorithm = 'aes-256-ctr';
 let password = 'd6F3Efeq';
 
 promptUser.start();
-console.log("Welcome to the random password generator!\n\nWhat do you want to do?\n\n**** Current commands are: *****\n   >>>'add': Manually add a password.\n   >>>'generate': promptUsers you for parameters and generates a random password for you.\n   >>>'get website': Get specific password(s) for a website.\n   >>>'get id': Get a password by ID number. \n   >>>'all': Shows you all passwords currently saved.\n   >>>'delete': Deletes a single password. (CAUTION: This cannot be undone!)\n   >>>'delete all': Deletes all saved passwords. (CAUTION: This cannot be undone!)\n   >>>'exit': Exit program");
+console.log("Welcome to the random password generator!\n\nWhat do you want to do?\n\n**** Current commands are: *****\n   >>>'new': If this is your first install run this first to create a new storage file.\n   >>>'add': Manually add a password.\n   >>>'generate': promptUsers you for parameters and generates a random password for you.\n   >>>'get website': Get specific password(s) for a website.\n   >>>'get id': Get a password by ID number. \n   >>>'all': Shows you all passwords currently saved.\n   >>>'delete': Deletes a single password. (CAUTION: This cannot be undone!)\n   >>>'delete all': Deletes all saved passwords. (CAUTION: This cannot be undone!)\n   >>>'exit': Exit program");
 promptUser.get(['command'], function (err, result) {
 	switch (result.command.toLowerCase()){
+		case "new":
+			blankJSON(false);
+		break;
+
 		case "add":
 			promptUser.get(['website','username','password'],function(err, getInput){
 				var passwords = fs.readFileSync("passwordStorage.json","utf-8");
@@ -53,7 +57,10 @@ promptUser.get(['command'], function (err, result) {
 		break;
 
 		case "all":
-			console.log(allPasswords());
+			var passwords = JSON.parse(allPasswords());
+			for(var i = 0; i < passwords.length; i++){
+				console.log(passwords[i])
+			}
 		break;
 
 		case "delete":
@@ -67,7 +74,7 @@ promptUser.get(['command'], function (err, result) {
 			console.log("Are you sure [yes/no]?");
 			promptUser.get(["sure"],function (err,areYou){
 				if (areYou.sure === "yes"){
-					deleteAll();
+					blankJSON(true);
 				} else if (areYou.sure === "no"){
 					console.log("No passwords were deleted. Goodbye!")
 				} else {
@@ -239,13 +246,11 @@ promptUser.get(['command'], function (err, result) {
 		}
 	};
 
-	function deleteAll(){
-		var passwords = fs.readFileSync("passwordStorage.json","utf-8");
-		var decryptedFile = JSON.parse(decrypt(passwords));
-		decryptedFile = "";
-		fs.writeFile("passwordStorage.json", encrypt(JSON.stringify(decryptedFile)), function (err, data){
+	function blankJSON(deleteAction){
+		var blank = "";
+		fs.writeFile("passwordStorage.json", encrypt(JSON.stringify(blank)), function (err, data){
 			if (err) throw err;
-			console.log("All passwords deleted! Goodbye!");
+			deleteAction ? console.log("All passwords deleted! Goodbye!") : console.log("Storage JSON created!");
 		});
 	};
 	
